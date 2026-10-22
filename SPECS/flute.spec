@@ -1,16 +1,18 @@
 Name: flute
 Version: 1.3.0
-Release: 18.OOo31%{?dist}
+Release: 19.OOo31%{?dist}
 Summary: Java CSS parser using SAC
 # The entire source code is W3C except ParseException.java which is LGPLv2+
 License: W3C and LGPLv2+
 Group: System Environment/Libraries
 Source0: http://downloads.sourceforge.net/jfreereport/%{name}-%{version}-OOo31.zip
 URL: http://www.w3.org/Style/CSS/SAC/
-BuildRequires: ant, java-devel, jpackage-utils, sac
+BuildRequires: ant, java-21-openjdk-devel, jpackage-utils, sac
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: java-headless, jpackage-utils sac
+Requires: java-21-openjdk-headless >= 1:21, jpackage-utils sac
 BuildArch: noarch
+
+%global java_home /usr/lib/jvm/java-21-openjdk
 
 %description
 A Cascading Style Sheets parser using the Simple API for CSS, for Java.
@@ -29,6 +31,7 @@ mkdir -p lib
 build-jar-repository -s -p lib sac
 
 %build
+export JAVA_HOME=%{java_home}
 ant jar javadoc
 
 %install
@@ -54,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Oct 06 2026 Tomas Popela <tpopela@redhat.com> - 1.3.0-19.OOo31
+- OpenJDK 8 won't be supported anymore on RHEL 8 starting from November 2026,
+  move to OpenJDK 21
+- Resolves: RHEL-275416
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.0-18.OOo31
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
